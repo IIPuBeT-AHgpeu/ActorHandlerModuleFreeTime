@@ -167,7 +167,7 @@ namespace ActorHandlerModuleFreeTime
                 }
             }
 
-            return rnd.Next(ListOfChoose.Count);
+            return ListOfChoose[rnd.Next(0, ListOfChoose.Count)];
 
         }
 
