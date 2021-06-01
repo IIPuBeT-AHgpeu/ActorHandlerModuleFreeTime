@@ -21,7 +21,7 @@ namespace ActorHandlerModuleFreeTime
         public int Priority { get; set; }
 
         // Точка назначения
-        public Place Destination { get; }
+        public Place Destination { get; set; }
 
         public MovementActivityFreeTime(Actor actor)
         {

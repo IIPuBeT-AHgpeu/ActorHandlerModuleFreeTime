@@ -31,11 +31,11 @@ namespace ActorHandlerModuleFreeTime
                 int newPriority = 0;
 
                 // Определяем текущий приоритет для активностей FreeTime
-                if (actor.GetState<SpecState>().Mood <= 0.05 * 100) newPriority = 92;
-                else if (actor.GetState<SpecState>().Mood > (0.05 * 100) && actor.GetState<SpecState>().Mood <= 0.1 * 100) newPriority = 82;
-                else if (actor.GetState<SpecState>().Mood > 0.1 * 100 && actor.GetState<SpecState>().Mood <= 0.3 * 100) newPriority = 62;
-                else if (actor.GetState<SpecState>().Mood > 0.3 * 100 && actor.GetState<SpecState>().Mood <= 0.6 * 100) newPriority = 42;
-                else if (actor.GetState<SpecState>().Mood > 0.6 * 100 && actor.GetState<SpecState>().Mood <= 0.8 * 100) newPriority = 22;
+                if (actor.GetState<SpecState>().Mood <= (0.05 * 100)) newPriority = 92;
+                else if (actor.GetState<SpecState>().Mood > (0.05 * 100) && actor.GetState<SpecState>().Mood <= (0.1 * 100)) newPriority = 82;
+                else if (actor.GetState<SpecState>().Mood > (0.1 * 100) && actor.GetState<SpecState>().Mood <= (0.3 * 100)) newPriority = 62;
+                else if (actor.GetState<SpecState>().Mood > (0.3 * 100) && actor.GetState<SpecState>().Mood <= (0.6 * 100)) newPriority = 42;
+                else if (actor.GetState<SpecState>().Mood > (0.6 * 100) && actor.GetState<SpecState>().Mood <= (0.8 * 100)) newPriority = 22;
                 else if (actor.GetState<SpecState>().Mood > 0.8 * 100) newPriority = 2;
 
                 // Есть ли активность
