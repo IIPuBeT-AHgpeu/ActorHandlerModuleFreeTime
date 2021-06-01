@@ -7,7 +7,6 @@ using PathsFindingCoreModule;
 using NetTopologySuite.Geometries;  // Отсюда Point и другая геометрия 
 using NetTopologySuite.Mathematics; // Отсюда векторы 
 
-
 namespace ActorHandlerModuleFreeTime
 {
     class MovementActivityFreeTime : IActivity
