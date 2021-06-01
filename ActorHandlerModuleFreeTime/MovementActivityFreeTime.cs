@@ -4,8 +4,9 @@ using System.Collections.Generic;
 using ActorModule;
 using InitializeActorModule;
 using PathsFindingCoreModule;
-using NetTopologySuite.Geometries;  // Отсюда Point и другая геометрия
-using NetTopologySuite.Mathematics; // Отсюда векторы
+using NetTopologySuite.Geometries;  // Отсюда Point и другая геометрия 
+using NetTopologySuite.Mathematics; // Отсюда векторы 
+
 
 namespace ActorHandlerModuleFreeTime
 {
