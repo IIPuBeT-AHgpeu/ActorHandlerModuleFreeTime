@@ -217,19 +217,20 @@ namespace ActorHandlerModuleFreeTime
             if (actor.X == Path[i].X && actor.Y == Path[i].Y && i < Path.Length - 1)
             {
                 i++;
-
+#if DEBUG
                 Console.WriteLine(i);
                 Console.WriteLine(Path.Length);
+#endif
             }
 
             // Если в процессе шагания мы достигли точки назначения
             if (actor.X == Path[Path.Length - 1].X && actor.Y == Path[Path.Length - 1].Y)
             {
-                Console.WriteLine("Start Waiting");
-                actor.Activity = new WaitingActivityFreeTime(Priority, Destination.TagKey);
-                Priority = 0;
+                Console.WriteLine("Start WaitingFreeTime");
                 i = 0;
                 IsPath = true;
+                actor.Activity = new WaitingActivityFreeTime(Priority, Destination.TagKey);
+                Priority = 0;
                 //return true;
             }
             return false;
