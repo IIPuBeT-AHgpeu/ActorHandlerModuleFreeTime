@@ -174,7 +174,7 @@ namespace ActorHandlerModuleFreeTime
 
         // Здесь происходит работа с актором
         public bool Update(Actor actor, double deltaTime)
-        {
+        {           
             // Расстояние, которое может пройти актор с заданной скоростью за прошедшее время
             double distance = actor.GetState<SpecState>().Speed * deltaTime;
 
@@ -191,6 +191,13 @@ namespace ActorHandlerModuleFreeTime
 
                 SecondsToUpdate -= 1;
             }
+            // Определяем текущий приоритет для активностей FreeTime
+            if (actor.GetState<SpecState>().Mood <= (0.05 * 100)) Priority = 92;
+            else if (actor.GetState<SpecState>().Mood > (0.05 * 100) && actor.GetState<SpecState>().Mood <= (0.1 * 100)) Priority = 82;
+            else if (actor.GetState<SpecState>().Mood > (0.1 * 100) && actor.GetState<SpecState>().Mood <= (0.3 * 100)) Priority = 62;
+            else if (actor.GetState<SpecState>().Mood > (0.3 * 100) && actor.GetState<SpecState>().Mood <= (0.6 * 100)) Priority = 42;
+            else if (actor.GetState<SpecState>().Mood > (0.6 * 100) && actor.GetState<SpecState>().Mood <= (0.8 * 100)) Priority = 22;
+            else if (actor.GetState<SpecState>().Mood > 0.8 * 100) Priority = 2;
 #if DEBUG
             Console.WriteLine($"Hunger: {actor.GetState<SpecState>().Hunger}; Mood: {actor.GetState<SpecState>().Mood}; Fatigue: {actor.GetState<SpecState>().Fatigue}");
 #endif

@@ -56,6 +56,10 @@ namespace ActorHandlerModuleFreeTime
                     actor.Activity = new MovementActivityFreeTime(actor, newPriority);
                     Console.WriteLine("Said actor go walking\n");
                 }
+                else if(isFreeTimeMovementActivity || isFreeTimeWaitingActivity)
+                {
+                    //actor.Activity.Priority = newPriority;
+                }
 
             }
         }
