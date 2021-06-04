@@ -15,6 +15,7 @@ namespace ActorHandlerModuleFreeTime
         public int i = 0;
 
         public bool IsPath = true;
+        private double SecondsToUpdate { get; set; }
 
         // Приоритет делаем авто-свойством, со значением по умолчанию
         // Вообще он дожен был быть полем, но интерфейсы не дают объявлять поля, так что...
@@ -177,12 +178,19 @@ namespace ActorHandlerModuleFreeTime
             // Расстояние, которое может пройти актор с заданной скоростью за прошедшее время
             double distance = actor.GetState<SpecState>().Speed * deltaTime;
 
-            // Уменьшаем параметр голода, усталости, настроения
-            if (actor.GetState<SpecState>().Hunger <= 0.001 * 100) actor.GetState<SpecState>().Hunger = 0;
-            else actor.GetState<SpecState>().Hunger -= 0.001 * 100;
+            SecondsToUpdate += deltaTime;
 
-            if (actor.GetState<SpecState>().Fatigue <= 0.001 * 100) actor.GetState<SpecState>().Fatigue = 0;
-            else actor.GetState<SpecState>().Fatigue -= 0.001 * 100;
+            if (SecondsToUpdate >= 1)
+            {
+                // Уменьшаем параметр голода, усталости, настроения
+                if (actor.GetState<SpecState>().Hunger <= 0.001 * 100) actor.GetState<SpecState>().Hunger = 0;
+                else actor.GetState<SpecState>().Hunger -= 0.001 * 100;
+
+                if (actor.GetState<SpecState>().Fatigue <= 0.001 * 100) actor.GetState<SpecState>().Fatigue = 0;
+                else actor.GetState<SpecState>().Fatigue -= 0.001 * 100;
+
+                SecondsToUpdate -= 1;
+            }
 #if DEBUG
             Console.WriteLine($"Hunger: {actor.GetState<SpecState>().Hunger}; Mood: {actor.GetState<SpecState>().Mood}; Fatigue: {actor.GetState<SpecState>().Fatigue}");
 #endif
@@ -229,7 +237,7 @@ namespace ActorHandlerModuleFreeTime
                 Console.WriteLine("Start WaitingFreeTime");
                 i = 0;
                 IsPath = true;
-                actor.Activity = new WaitingActivityFreeTime(Priority, Destination.TagKey);
+                actor.Activity = new WaitingActivityFreeTime(Priority, Destination.TagKey, SecondsToUpdate);
                 Priority = 0;
                 //return true;
             }
