@@ -83,7 +83,7 @@ namespace ActorHandlerModuleFreeTime
             */
 
             //Если стоит покушать (Насыщенность <= 65%) и не очень устали и есть места, чтобы перекусить
-            if (actor.GetState<SpecState>().Hunger <= 0.65 * 100 && actor.GetState<SpecState>().Money >= 2 * FoodPrice && actor.GetState<SpecState>().Fatigue > 0.3 * 100 /*>?*/ && ActorHaveFavoriteFoodPlaceFlag)
+            if (actor.GetState<SpecState>().Satiety <= 0.65 * 100 && actor.GetState<SpecState>().Money >= 2 * FoodPrice && actor.GetState<SpecState>().Stamina > 0.3 * 100 /*>?*/ && ActorHaveFavoriteFoodPlaceFlag)
             {
                 //модифицируем список выбора места: чем ближе место, в котором можно покушать, тем выше вероятность
                 //оставшееся место (где нет возможности поесть) имеет или самый низкий шанс или (возможно) не самый,
@@ -128,7 +128,7 @@ namespace ActorHandlerModuleFreeTime
 
             }
 
-            else if (actor.GetState<SpecState>().Fatigue > 0.3 * 100)  //если кушать не нужно или нет мест, чтобы перекусить, и не сильно устали
+            else if (actor.GetState<SpecState>().Stamina > 0.3 * 100)  //если кушать не нужно или нет мест, чтобы перекусить, и не сильно устали
             {
                 /*
                   модифицируем список выбора: чем ближе место, тем вероятнее в него попасть
@@ -183,11 +183,11 @@ namespace ActorHandlerModuleFreeTime
             if (SecondsToUpdate >= 1)
             {
                 // Уменьшаем параметр голода, усталости, настроения
-                if (actor.GetState<SpecState>().Hunger <= 0.001 * 100) actor.GetState<SpecState>().Hunger = 0;
-                else actor.GetState<SpecState>().Hunger -= 0.001 * 100;
+                if (actor.GetState<SpecState>().Satiety <= 0.001 * 100) actor.GetState<SpecState>().Satiety = 0;
+                else actor.GetState<SpecState>().Satiety -= 0.001 * 100;
 
-                if (actor.GetState<SpecState>().Fatigue <= 0.001 * 100) actor.GetState<SpecState>().Fatigue = 0;
-                else actor.GetState<SpecState>().Fatigue -= 0.001 * 100;
+                if (actor.GetState<SpecState>().Stamina <= 0.001 * 100) actor.GetState<SpecState>().Stamina = 0;
+                else actor.GetState<SpecState>().Stamina -= 0.001 * 100;
 
                 SecondsToUpdate -= 1;
             }
@@ -199,7 +199,7 @@ namespace ActorHandlerModuleFreeTime
             else if (actor.GetState<SpecState>().Mood > (0.6 * 100) && actor.GetState<SpecState>().Mood <= (0.8 * 100)) Priority = 22;
             else if (actor.GetState<SpecState>().Mood > 0.8 * 100) Priority = 2;
 #if DEBUG
-            Console.WriteLine($"Hunger: {actor.GetState<SpecState>().Hunger}; Mood: {actor.GetState<SpecState>().Mood}; Fatigue: {actor.GetState<SpecState>().Fatigue}");
+            Console.WriteLine($"Hunger: {actor.GetState<SpecState>().Satiety}; Mood: {actor.GetState<SpecState>().Mood}; Fatigue: {actor.GetState<SpecState>().Stamina}");
 #endif
             if (IsPath)
             {

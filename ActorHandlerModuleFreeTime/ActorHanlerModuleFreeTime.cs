@@ -46,7 +46,7 @@ namespace ActorHandlerModuleFreeTime
                 bool isFreeTimeWaitingActivity = actor.Activity is WaitingActivityFreeTime;
 
 #if DEBUG
-                Console.WriteLine($"Flags: {isActivity} {isFreeTimeMovementActivity} {isFreeTimeWaitingActivity}");
+                Console.WriteLine($"Flags: Have activity:{isActivity} MovementFreeTime:{isFreeTimeMovementActivity} WaitingFreeTime:{isFreeTimeWaitingActivity}");
 #endif
                 // Если вообще нет активности
                 // или (активности не FreeTime и приоритет активностей FreeTime выше приоритета текущей активности)
@@ -58,7 +58,7 @@ namespace ActorHandlerModuleFreeTime
                 }
                 else if(isFreeTimeMovementActivity || isFreeTimeWaitingActivity)
                 {
-                    //actor.Activity.Priority = newPriority;
+                    //actor.Activity.Priority = newPriority; // Нет сеттера :(
                 }
 
             }
