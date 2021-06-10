@@ -7,7 +7,7 @@ namespace ActorHandlerModuleFreeTime
 {
     class WaitingActivityFreeTime : IActivity
     {
-        public int Priority { get; set; }
+        public int Priority { get; private set; }
         // Тег места - для проверки: можно ли покушать в данном месте
         private string TagKey { get; set; }
         private double SecondsToUpdate { get; set; }

@@ -19,7 +19,7 @@ namespace ActorHandlerModuleFreeTime
 
         // Приоритет делаем авто-свойством, со значением по умолчанию
         // Вообще он дожен был быть полем, но интерфейсы не дают объявлять поля, так что...
-        public int Priority { get; set; }
+        public int Priority { get; private set; }
 
         // Точка назначения
         public Place Destination { get; set; }
@@ -33,6 +33,9 @@ namespace ActorHandlerModuleFreeTime
         {
             Destination = actor.GetState<PlaceState>().FavoritePlaces[ChoosePlace(actor)];
             Priority = priority;
+#if DEBUG
+                    Console.WriteLine($"MovementFreeTime is working! Priority: {Priority}");
+#endif
         }
 
         static private int ChoosePlace(Actor actor)
@@ -49,10 +52,16 @@ namespace ActorHandlerModuleFreeTime
             for (int i = 0; i < actor.GetState<PlaceState>().FavoritePlaces.Count; i++)
             {
                 ListOfChoose.Add(i);
+#if DEBUG
+                    Console.WriteLine("Getting {i+1} path length");
+#endif
                 WayLenghtList.Add(PathsFinding.GetPath(new Coordinate(actor.X, actor.Y), new Coordinate(actor.GetState<PlaceState>().FavoritePlaces[i].X,
                     actor.GetState<PlaceState>().FavoritePlaces[i].Y), "Walking").Result.Length);  //Считаем длину пути 
                 if (actor.GetState<PlaceState>().FavoritePlaces[i].TagKey == "shop" && !ActorHaveFavoriteFoodPlaceFlag)   //Поднять флаг присутствия мест для перекуса
                     ActorHaveFavoriteFoodPlaceFlag = true;
+#if DEBUG
+                    Console.WriteLine("Have {i+1} path length");
+#endif
             }
 
             //Переменные-буферы для сортировки
@@ -167,7 +176,9 @@ namespace ActorHandlerModuleFreeTime
                     AdditionalProbability /= 2;
                 }
             }
-
+#if DEBUG
+                    Console.WriteLine("Activity chose way");
+#endif
             return ListOfChoose[rnd.Next(0, ListOfChoose.Count)];
 
         }

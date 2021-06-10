@@ -52,6 +52,9 @@ namespace ActorHandlerModuleFreeTime
                 // или (активности не FreeTime и приоритет активностей FreeTime выше приоритета текущей активности)
                 if ((!isActivity) || (!isFreeTimeMovementActivity && !isFreeTimeWaitingActivity && newPriority > actor.Activity.Priority))
                 {
+#if DEBUG
+                    Console.WriteLine("Starting FreeTimeActivity...");
+#endif
                     // Назначить актору путь до работы
                     actor.Activity = new MovementActivityFreeTime(actor, newPriority);
                     Console.WriteLine("Said actor go walking\n");
