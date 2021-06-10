@@ -23,6 +23,7 @@ namespace ActorHandlerModuleFreeTime
 
         // Точка назначения
         public Place Destination { get; set; }
+        private bool IsHaveDestination { get; set; }
 
         public MovementActivityFreeTime(Actor actor)
         {
@@ -31,7 +32,7 @@ namespace ActorHandlerModuleFreeTime
 
         public MovementActivityFreeTime(Actor actor, int priority)
         {
-            Destination = actor.GetState<PlaceState>().FavoritePlaces[ChoosePlace(actor)];
+            IsHaveDestination = false;
             Priority = priority;
 #if DEBUG
                     Console.WriteLine($"MovementFreeTime is working! Priority: {Priority}");
@@ -186,6 +187,11 @@ namespace ActorHandlerModuleFreeTime
         // Здесь происходит работа с актором
         public bool Update(Actor actor, double deltaTime)
         {           
+            if(!IsHaveDestination)
+            {
+                Destination = actor.GetState<PlaceState>().FavoritePlaces[ChoosePlace(actor)];
+                IsHaveDestination = true;
+            }
             // Расстояние, которое может пройти актор с заданной скоростью за прошедшее время
             double distance = actor.GetState<SpecState>().Speed * deltaTime;
 
@@ -256,6 +262,7 @@ namespace ActorHandlerModuleFreeTime
                 i = 0;
                 IsPath = true;
                 actor.Activity = new WaitingActivityFreeTime(Priority, Destination.TagKey, SecondsToUpdate);
+                IsHaveDestination = false;
                 Priority = 0;
                 //return true;
             }
