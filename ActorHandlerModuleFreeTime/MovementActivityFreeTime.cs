@@ -54,14 +54,14 @@ namespace ActorHandlerModuleFreeTime
             {
                 ListOfChoose.Add(i);
 #if DEBUG
-                    Console.WriteLine("Getting {i+1} path length");
+                    Console.WriteLine($"Getting {i+1} path length");
 #endif
                 WayLenghtList.Add(PathsFinding.GetPath(new Coordinate(actor.X, actor.Y), new Coordinate(actor.GetState<PlaceState>().FavoritePlaces[i].X,
                     actor.GetState<PlaceState>().FavoritePlaces[i].Y), "Walking").Result.Length);  //Считаем длину пути 
                 if (actor.GetState<PlaceState>().FavoritePlaces[i].TagKey == "shop" && !ActorHaveFavoriteFoodPlaceFlag)   //Поднять флаг присутствия мест для перекуса
                     ActorHaveFavoriteFoodPlaceFlag = true;
 #if DEBUG
-                    Console.WriteLine("Have {i+1} path length");
+                    Console.WriteLine($"Have {i+1} path length");
 #endif
             }
 
