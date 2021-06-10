@@ -39,7 +39,7 @@ namespace ActorHandlerModuleFreeTime
 #endif
         }
 
-        static private int ChoosePlace(Actor actor)
+        private int ChoosePlace(Actor actor)
         {
             const double FoodPrice = 100; //Установил цену на еду
 
