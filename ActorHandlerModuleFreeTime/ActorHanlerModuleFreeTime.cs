@@ -7,6 +7,8 @@ namespace ActorHandlerModuleFreeTime
 {
     public class ActorHandlerModuleFreeTime : OSMLSModule
     {
+
+        private double OneSecondAccumulate { get; set; } = 0;
         /// <summary>
         /// Инициализация модуля. В отладочной конфигурации выводит сообщение
         /// </summary>
@@ -21,47 +23,52 @@ namespace ActorHandlerModuleFreeTime
         /// </summary>
         public override void Update(long elapsedMilliseconds)
         {
+            OneSecondAccumulate += elapsedMilliseconds / 1000;
             // Получаем список акторов
+            if(OneSecondAccumulate > 1)
+            { 
             var actors = MapObjects.GetAll<Actor>();
-            // Console.WriteLine($"Got {actors.Count} actors\n");
+                // Console.WriteLine($"Got {actors.Count} actors\n");
 
-            // Для каждого актора проверяем условия и назначаем новую активность если нужно
-            foreach (var actor in actors)
-            {
-                int newPriority = 0;
+                // Для каждого актора проверяем условия и назначаем новую активность если нужно
+                foreach (var actor in actors)
+                {
+                    int newPriority = 0;
 
-                // Определяем текущий приоритет для активностей FreeTime
-                if (actor.GetState<SpecState>().Mood <= (0.05 * 100)) newPriority = 92;
-                else if (actor.GetState<SpecState>().Mood > (0.05 * 100) && actor.GetState<SpecState>().Mood <= (0.1 * 100)) newPriority = 82;
-                else if (actor.GetState<SpecState>().Mood > (0.1 * 100) && actor.GetState<SpecState>().Mood <= (0.3 * 100)) newPriority = 62;
-                else if (actor.GetState<SpecState>().Mood > (0.3 * 100) && actor.GetState<SpecState>().Mood <= (0.6 * 100)) newPriority = 42;
-                else if (actor.GetState<SpecState>().Mood > (0.6 * 100) && actor.GetState<SpecState>().Mood <= (0.8 * 100)) newPriority = 22;
-                else if (actor.GetState<SpecState>().Mood > 0.8 * 100) newPriority = 2;
+                    // Определяем текущий приоритет для активностей FreeTime
+                    if (actor.GetState<SpecState>().Mood <= (0.05 * 100)) newPriority = 92;
+                    else if (actor.GetState<SpecState>().Mood > (0.05 * 100) && actor.GetState<SpecState>().Mood <= (0.1 * 100)) newPriority = 82;
+                    else if (actor.GetState<SpecState>().Mood > (0.1 * 100) && actor.GetState<SpecState>().Mood <= (0.3 * 100)) newPriority = 62;
+                    else if (actor.GetState<SpecState>().Mood > (0.3 * 100) && actor.GetState<SpecState>().Mood <= (0.6 * 100)) newPriority = 42;
+                    else if (actor.GetState<SpecState>().Mood > (0.6 * 100) && actor.GetState<SpecState>().Mood <= (0.8 * 100)) newPriority = 22;
+                    else if (actor.GetState<SpecState>().Mood > 0.8 * 100) newPriority = 2;
 
-                // Есть ли активность
-                bool isActivity = actor.Activity != null;
+                    // Есть ли активность
+                    bool isActivity = actor.Activity != null;
 
-                // Относятся ли активности к FreeTime
-                bool isFreeTimeMovementActivity = actor.Activity is MovementActivityFreeTime;
-                bool isFreeTimeWaitingActivity = actor.Activity is WaitingActivityFreeTime;
+                    // Относятся ли активности к FreeTime
+                    bool isFreeTimeMovementActivity = actor.Activity is MovementActivityFreeTime;
+                    bool isFreeTimeWaitingActivity = actor.Activity is WaitingActivityFreeTime;
 
 #if DEBUG
                 Console.WriteLine($"Flags: Have activity:{isActivity} MovementFreeTime:{isFreeTimeMovementActivity} WaitingFreeTime:{isFreeTimeWaitingActivity}");
 #endif
-                // Если вообще нет активности
-                // или (активности не FreeTime и приоритет активностей FreeTime выше приоритета текущей активности)
-                if ((!isActivity) || (!isFreeTimeMovementActivity && !isFreeTimeWaitingActivity && newPriority > actor.Activity.Priority))
-                {
+                    // Если вообще нет активности
+                    // или (активности не FreeTime и приоритет активностей FreeTime выше приоритета текущей активности)
+                    if ((!isActivity) || (!isFreeTimeMovementActivity && !isFreeTimeWaitingActivity && newPriority > actor.Activity.Priority))
+                    {
 #if DEBUG
                     Console.WriteLine("Starting FreeTimeActivity...");
 #endif
-                    // Назначить актору путь до работы
-                    actor.Activity = new MovementActivityFreeTime(actor, newPriority);
-                    Console.WriteLine("Said actor go walking\n");
-                }
-                else if(isFreeTimeMovementActivity || isFreeTimeWaitingActivity)
-                {
-                    //actor.Activity.Priority = newPriority; // Нет сеттера :(
+                        // Назначить актору путь до работы
+                        actor.Activity = new MovementActivityFreeTime(actor, newPriority);
+                        Console.WriteLine("Said actor go walking\n");
+                    }
+                    else if (isFreeTimeMovementActivity || isFreeTimeWaitingActivity)
+                    {
+                        //actor.Activity.Priority = newPriority; // Нет сеттера :(
+                    }
+                    OneSecondAccumulate -= 1;
                 }
 
             }
