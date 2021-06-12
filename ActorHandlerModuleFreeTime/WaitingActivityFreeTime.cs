@@ -25,6 +25,9 @@ namespace ActorHandlerModuleFreeTime
         }
         public bool Update(Actor actor, double deltaTime)
         {
+#if DEBUG
+            Console.WriteLine("Actor is waiting (freetime).");
+#endif
             SecondsToUpdate += deltaTime;
 
             if (SecondsToUpdate >= 1)

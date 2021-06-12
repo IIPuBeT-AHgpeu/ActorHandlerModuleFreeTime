@@ -109,7 +109,10 @@ namespace ActorHandlerModuleFreeTime
 
         // Здесь происходит работа с актором
         public bool Update(Actor actor, double deltaTime)
-        {           
+        {
+#if DEBUG
+            Console.WriteLine("Actor is moving (freetime).");
+#endif
             if(!IsHaveDestination)
             {
                 Destination = actor.GetState<PlaceState>().FavoritePlaces[ChoosePlace(actor)];
