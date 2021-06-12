@@ -56,12 +56,8 @@ namespace ActorHandlerModuleFreeTime
                     Console.WriteLine("Starting FreeTimeActivity...");
 #endif
                     // Назначить актору путь до работы
-                    actor.Activity = new MovementActivityFreeTime(actor, newPriority);
+                    actor.Activity = new MovementActivityFreeTime(newPriority);
                     Console.WriteLine("Said actor go walking\n");
-                }
-                else if(isFreeTimeMovementActivity || isFreeTimeWaitingActivity)
-                {
-                    //actor.Activity.Priority = newPriority; // Нет сеттера :(
                 }
 
             }
