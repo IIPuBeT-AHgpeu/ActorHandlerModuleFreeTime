@@ -45,7 +45,6 @@ namespace ActorHandlerModuleFreeTime
 
             Random rnd = new Random();  //Необходимо перенести в конец перед return-ом
 
-            List<double> WayLenghtList = new List<double>() { };    //Лист, содержащий длины путей
             List<int> ListOfChoose = new List<int>() { };           //Лист, содержащий набор индексов списка любимых мест для выбора 1 из них
             bool ActorHaveFavoriteFoodPlaceFlag = false;            //Флаг присутствия мест для перекуса
 
@@ -53,38 +52,9 @@ namespace ActorHandlerModuleFreeTime
             for (int i = 0; i < actor.GetState<PlaceState>().FavoritePlaces.Count; i++)
             {
                 ListOfChoose.Add(i);
-#if DEBUG
-                    Console.WriteLine($"Getting {i+1} path length");
-#endif
-                WayLenghtList.Add(PathsFinding.GetPath(new Coordinate(actor.X, actor.Y), new Coordinate(actor.GetState<PlaceState>().FavoritePlaces[i].X,
-                    actor.GetState<PlaceState>().FavoritePlaces[i].Y), "Walking").Result.Length);  //Считаем длину пути 
+
                 if (actor.GetState<PlaceState>().FavoritePlaces[i].TagKey == "shop" && !ActorHaveFavoriteFoodPlaceFlag)   //Поднять флаг присутствия мест для перекуса
                     ActorHaveFavoriteFoodPlaceFlag = true;
-#if DEBUG
-                    Console.WriteLine($"Have {i+1} path length");
-#endif
-            }
-
-            //Переменные-буферы для сортировки
-            double tmpDouble = 0;
-            int tmpInt = 0;
-
-            //Сортировка по расстоянию до места
-            //сортирует сразу 2 списка, сохраняя соответствие
-            for (int i = 0; i < WayLenghtList.Count - 1; i++)
-            {
-                for (int j = i + 1; j < WayLenghtList.Count; j++)
-                {
-                    if (WayLenghtList[i] > WayLenghtList[j])
-                    {
-                        tmpDouble = WayLenghtList[i];
-                        tmpInt = ListOfChoose[i];
-                        WayLenghtList[i] = WayLenghtList[j];
-                        ListOfChoose[i] = ListOfChoose[j];
-                        WayLenghtList[j] = tmpDouble;
-                        ListOfChoose[j] = tmpInt;
-                    }
-                }
             }
 
             /*
@@ -92,17 +62,15 @@ namespace ActorHandlerModuleFreeTime
                 мест, исходя из текущего состояния параметров Actor'a
             */
 
-            //Если стоит покушать (Насыщенность <= 65%) и не очень устали и есть места, чтобы перекусить
-            if (actor.GetState<SpecState>().Satiety <= 0.65 * 100 && actor.GetState<SpecState>().Money >= 2 * FoodPrice && actor.GetState<SpecState>().Stamina > 0.3 * 100 /*>?*/ && ActorHaveFavoriteFoodPlaceFlag)
+            //Если стоит покушать (Насыщенность <= 65%) и есть места, чтобы перекусить
+            if (actor.GetState<SpecState>().Satiety <= 0.65 * 100 && actor.GetState<SpecState>().Money >= 2 * FoodPrice && ActorHaveFavoriteFoodPlaceFlag)
             {
-                //модифицируем список выбора места: чем ближе место, в котором можно покушать, тем выше вероятность
-                //оставшееся место (где нет возможности поесть) имеет или самый низкий шанс или (возможно) не самый,
-                //но один из самых низких шансов
+                //модифицируем список выбора места
 
                 //Флаг присутствия места, не являющимся местом перекуса
                 bool PresenceFlag = false;
 
-                //Модифицируем массив индексов: убираем все места, в которых нет возможности поесть, кроме одного (самого ближайшего)
+                //Модифицируем массив индексов: убираем все места, в которых нет возможности поесть, кроме одного
                 for (int i = 0; i < ListOfChoose.Count; i++)
                 {
                     if (actor.GetState<PlaceState>().FavoritePlaces[ListOfChoose[i]].TagKey != "shop")
@@ -114,7 +82,6 @@ namespace ActorHandlerModuleFreeTime
                         else
                         {
                             ListOfChoose.RemoveAt(i);
-                            WayLenghtList.RemoveAt(i);
                             i--;
                         }
                     }
@@ -138,45 +105,22 @@ namespace ActorHandlerModuleFreeTime
 
             }
 
-            else if (actor.GetState<SpecState>().Stamina > 0.3 * 100)  //если кушать не нужно или нет мест, чтобы перекусить, и не сильно устали
+            else  //если кушать не нужно или нет мест, чтобы перекусить
             {
                 /*
                   модифицируем список выбора: чем ближе место, тем вероятнее в него попасть
                 */
-
-                for (int i = 0; i < WayLenghtList.Count; i++)
-                {
-                    for (int j = WayLenghtList.Count - i - 1; j > 0; j--)
-                    {
-                        ListOfChoose.Add(ListOfChoose[i]);
-                    }
-                }
-            }
-
-            else //если сильно устали
-            {
-                //модифицируем список: убираем половину мест, до которых дальше всего идти, и, в оставшемся массиве,
-                //распределяем вероятности: чем ближе место, тем выше вероятность в него попасть
-
-                //Убираем из списка выбора ту половину, которая имеет наибольшие расстояния
-                for (int i = 0; i < WayLenghtList.Count / 2; i++)
-                {
-                    ListOfChoose.RemoveAt(ListOfChoose.Count - 1);
-                }
-
-                //Добавляем вероятности выбора следующим образом: чем ближе место, тем сильнее нужно увеличивать вероятность
-                int AdditionalProbability = WayLenghtList.Count;    //количество добавляемых индексов
-                int ListLength = ListOfChoose.Count;                //длина листа до добавления индексов
-
+                int ListLength = ListOfChoose.Count;        //длина списка до добавлений повторяющихся индексов
+                
                 for (int i = 0; i < ListLength; i++)
                 {
-                    for (int j = 0; j < AdditionalProbability; j++)
+                    for (int j = ListLength - i - 1; j > 0; j--)
                     {
                         ListOfChoose.Add(ListOfChoose[i]);
                     }
-                    AdditionalProbability /= 2;
                 }
             }
+
 #if DEBUG
                     Console.WriteLine("Activity chose way");
 #endif
