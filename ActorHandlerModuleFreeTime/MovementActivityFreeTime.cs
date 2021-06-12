@@ -25,12 +25,7 @@ namespace ActorHandlerModuleFreeTime
         public Place Destination { get; set; }
         private bool IsHaveDestination { get; set; }
 
-        public MovementActivityFreeTime(Actor actor)
-        {
-            Destination = actor.GetState<PlaceState>().FavoritePlaces[ChoosePlace(actor)];
-        }
-
-        public MovementActivityFreeTime(Actor actor, int priority)
+        public MovementActivityFreeTime(int priority)
         {
             IsHaveDestination = false;
             Priority = priority;
