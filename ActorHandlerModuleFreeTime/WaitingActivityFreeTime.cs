@@ -55,7 +55,7 @@ namespace ActorHandlerModuleFreeTime
                 SecondsToUpdate -= 1;
             }
 #if DEBUG
-            Console.WriteLine($"Hunger: {actor.GetState<SpecState>().Stamina}; Mood: {actor.GetState<SpecState>().Mood}; Fatigue: {actor.GetState<SpecState>().Stamina} Tag: {TagKey}");
+            //Console.WriteLine($"Hunger: {actor.GetState<SpecState>().Stamina}; Mood: {actor.GetState<SpecState>().Mood}; Fatigue: {actor.GetState<SpecState>().Stamina} Tag: {TagKey}");
 #endif
             // Определяем текущий приоритет для активностей FreeTime
             if (actor.GetState<SpecState>().Mood <= (0.05 * 100)) Priority = 92;

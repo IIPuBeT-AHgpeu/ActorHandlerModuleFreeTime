@@ -23,7 +23,6 @@ namespace ActorHandlerModuleFreeTime
         {
             // Получаем список акторов
             var actors = MapObjects.GetAll<Actor>();
-            // Console.WriteLine($"Got {actors.Count} actors\n");
 
             // Для каждого актора проверяем условия и назначаем новую активность если нужно
             foreach (var actor in actors)
@@ -46,7 +45,7 @@ namespace ActorHandlerModuleFreeTime
                 bool isFreeTimeWaitingActivity = actor.Activity is WaitingActivityFreeTime;
 
 #if DEBUG
-                Console.WriteLine($"Flags: Have activity:{isActivity} MovementFreeTime:{isFreeTimeMovementActivity} WaitingFreeTime:{isFreeTimeWaitingActivity}");
+                //Console.WriteLine($"Flags: Have activity:{isActivity} MovementFreeTime:{isFreeTimeMovementActivity} WaitingFreeTime:{isFreeTimeWaitingActivity}");
 #endif
                 // Если вообще нет активности
                 // или (активности не FreeTime и приоритет активностей FreeTime выше приоритета текущей активности)

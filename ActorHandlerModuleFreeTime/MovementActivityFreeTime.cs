@@ -24,13 +24,14 @@ namespace ActorHandlerModuleFreeTime
         // Точка назначения
         public Place Destination { get; set; }
         private bool IsHaveDestination { get; set; }
+        bool End = true;
 
         public MovementActivityFreeTime(int priority)
         {
             IsHaveDestination = false;
             Priority = priority;
 #if DEBUG
-                    Console.WriteLine($"MovementFreeTime is working! Priority: {Priority}");
+            Console.WriteLine($"MovementFreeTime is working! Priority: {Priority}");
 #endif
         }
 
@@ -101,7 +102,7 @@ namespace ActorHandlerModuleFreeTime
             }
 
 #if DEBUG
-                    Console.WriteLine("Activity chose way");
+            Console.WriteLine("Activity chose way");
 #endif
             return ListOfChoose[rnd.Next(0, ListOfChoose.Count)];
 
@@ -144,24 +145,20 @@ namespace ActorHandlerModuleFreeTime
                 else if (actor.GetState<SpecState>().Mood > (0.6 * 100) && actor.GetState<SpecState>().Mood <= (0.8 * 100)) Priority = 22;
                 else if (actor.GetState<SpecState>().Mood > 0.8 * 100) Priority = 2;
 #if DEBUG
-                Console.WriteLine($"Hunger: {actor.GetState<SpecState>().Satiety}; Mood: {actor.GetState<SpecState>().Mood}; Fatigue: {actor.GetState<SpecState>().Stamina}");
+                //Console.WriteLine($"Hunger: {actor.GetState<SpecState>().Satiety}; Mood: {actor.GetState<SpecState>().Mood}; Fatigue: {actor.GetState<SpecState>().Stamina}");
 #endif
                 if (IsPath)
                 {
                     var firstCoordinate = new Coordinate(actor.X, actor.Y);
                     var secondCoordinate = new Coordinate(Destination.X, Destination.Y);
-#if DEBUG
-                    Console.WriteLine("Start PathsFinding...");
-#endif
+
+                    if (!PathsFinding.GetPath(firstCoordinate, secondCoordinate, "Walking").IsCompleted && !End)
+                        return false;
+                    End = false;
                     Path = PathsFinding.GetPath(firstCoordinate, secondCoordinate, "Walking").Result.Coordinates;
+                    End = true;
+                    
                     IsPath = false;
-#if DEBUG
-                    if (Path == null)
-                        Console.WriteLine("Have no Path.");
-                    else
-                        Console.WriteLine("Have Path");
-                    Console.WriteLine("Finish PathsFinding.");
-#endif
                 }
 
                 Vector2D direction = new Vector2D(actor.Coordinate, Path[i]);
@@ -186,10 +183,6 @@ namespace ActorHandlerModuleFreeTime
                 if (actor.X == Path[i].X && actor.Y == Path[i].Y && i < Path.Length - 1)
                 {
                     i++;
-#if DEBUG
-                    Console.WriteLine(i);
-                    Console.WriteLine(Path.Length);
-#endif
                 }
 
                 // Если в процессе шагания мы достигли точки назначения
