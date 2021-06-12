@@ -100,22 +100,6 @@ namespace ActorHandlerModuleFreeTime
 
             }
 
-            else  //если кушать не нужно или нет мест, чтобы перекусить
-            {
-                /*
-                  модифицируем список выбора: чем ближе место, тем вероятнее в него попасть
-                */
-                int ListLength = ListOfChoose.Count;        //длина списка до добавлений повторяющихся индексов
-                
-                for (int i = 0; i < ListLength; i++)
-                {
-                    for (int j = ListLength - i - 1; j > 0; j--)
-                    {
-                        ListOfChoose.Add(ListOfChoose[i]);
-                    }
-                }
-            }
-
 #if DEBUG
                     Console.WriteLine("Activity chose way");
 #endif
